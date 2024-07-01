@@ -21,14 +21,18 @@ export default function Command() {
     const newTimer: Timer = { title, workspaceId, startTime: Date.now() };
     LocalStorage.setItem("runningTimer", JSON.stringify(newTimer));
     setRunningTimer(newTimer);
-    console.log("Timer started:", newTimer);
     closeMainWindow({popToRootType: PopToRootType.Immediate});
   };
 
-  const stopTimer = () => {
+  const stopTimer = async () => {
+    const currentTimer = await LocalStorage.getItem("runningTimer");
+    if (typeof currentTimer === "string") {
+      const timer: Timer = JSON.parse(currentTimer);
+      timer.endTime = Date.now();
+      LocalStorage.setItem("lastTimer", JSON.stringify(timer));
+    }
     LocalStorage.removeItem("runningTimer");
     setRunningTimer(null);
-    console.log("Timer stopped");
     closeMainWindow({popToRootType: PopToRootType.Immediate});
   };
 
