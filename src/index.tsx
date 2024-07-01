@@ -7,9 +7,30 @@ import { StartTimerForm } from "./StartTimerForm";
 export default function Command() {
   const [runningTimer, setRunningTimer] = useCachedState<Timer | null>("runningTimer", null);
   const [isLoading, setIsLoading] = useState(true);
+  const [duration, setDuration] = useState<string>("");
 
   useEffect(() => {
     setIsLoading(false);
+  }, [runningTimer]);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (runningTimer) {
+      const updateDuration = () => {
+        const elapsed = Date.now() - runningTimer.startTime;
+        setDuration(formatDuration(elapsed));
+      };
+
+      updateDuration(); // Initial update
+      intervalId = setInterval(updateDuration, 1000); // Update every second
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
   }, [runningTimer]);
 
   const startTimer = async (title: string, workspaceId: number) => {
@@ -44,7 +65,7 @@ export default function Command() {
       <List.Item
         title={runningTimer ? `Stop Timer: ${runningTimer.title}` : "Start Timer"}
         icon={runningTimer ? Icon.Stop : Icon.Stopwatch}
-        accessories={runningTimer ? [{ text: formatDuration(Date.now() - runningTimer.startTime) }] : []}
+        accessories={runningTimer ? [{ text: duration }] : []}
         actions={
           <ActionPanel>
             {runningTimer ? (
