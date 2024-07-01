@@ -18,15 +18,13 @@ interface StartTimerFormProps {
 export function StartTimerForm({ onSubmit }: StartTimerFormProps) {
   const preferences = getPreferenceValues<Preferences>();
   const apiKey = preferences.togglTrackApiKey;
-  console.log("API Key:", apiKey);
-  const { data, isLoading, error } = useFetch<Workspace[]>("https://api.track.toggl.com/api/v9/workspaces", {
+
+  const { data, isLoading } = useFetch<Workspace[]>("https://api.track.toggl.com/api/v9/workspaces", {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${Buffer.from(`${apiKey}:api_token`).toString("base64")}`,
-    },
+      Authorization: `Basic ${Buffer.from(`${apiKey}:api_token`).toString("base64")}`
+    }
   });
-  console.log("Workspaces:", data);
-  console.log("Error:", error);
 
   return (
     <Form
