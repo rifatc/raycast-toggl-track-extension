@@ -17,8 +17,8 @@ export default function Command() {
     });
   }, []);
 
-  const startTimer = (title: string, project: string) => {
-    const newTimer: Timer = { title, project, startTime: Date.now() };
+  const startTimer = (title: string, workspaceId: number) => {
+    const newTimer: Timer = { title, workspaceId, startTime: Date.now() };
     LocalStorage.setItem("runningTimer", JSON.stringify(newTimer));
     setRunningTimer(newTimer);
     console.log("Timer started:", newTimer);
