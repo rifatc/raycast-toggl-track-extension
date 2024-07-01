@@ -33,8 +33,8 @@ export default function Command() {
     };
   }, [runningTimer]);
 
-  const startTimer = async (title: string, workspaceId: number) => {
-    const newTimer: Timer = { title, workspaceId, startTime: Date.now() };
+  const startTimer = async (title: string, workspaceId: number, projectId: number) => {
+    const newTimer: Timer = { title, workspaceId, projectId, startTime: Date.now() };
     try {
       await setRunningTimer(newTimer);
       await showToast({ style: Toast.Style.Success, title: "Timer started", message: title });
