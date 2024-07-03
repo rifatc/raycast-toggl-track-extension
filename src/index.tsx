@@ -13,8 +13,7 @@ import { useEffect, useState } from "react";
 import { useCachedState } from "@raycast/utils";
 import { Timer } from "./Timer";
 import { StartTimerForm } from "./StartTimerForm";
-import { createTogglTimer } from "./api/CreateTimer";
-import { stopTogglTimer } from "./api/StopTimer";
+import { createTogglTimer, stopTogglTimer } from "./api/togglTrackApi";
 
 export default function Command() {
   const [runningTimer, setRunningTimer] = useCachedState<Timer | null>("runningTimer", null);
