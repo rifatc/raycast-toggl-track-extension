@@ -23,7 +23,7 @@
       "subtitle": "Notify about running timer",
       "description": "Notify about running timer",
       "mode": "no-view",
-      "interval": "1m"
+      "interval": "5m"
     }
   ],
   "preferences": [

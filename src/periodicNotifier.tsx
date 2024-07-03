@@ -1,6 +1,8 @@
 import { showHUD } from "@raycast/api";
 import { LocalStorage } from "@raycast/api";
 import { Timer } from "./Timer";
+import { runAppleScript } from "@raycast/utils";
+import formatDuration from "./utils/formatDuration";
 
 export default async function Command() {
   console.log("Command function called");
@@ -11,7 +13,9 @@ export default async function Command() {
     if (timerString) {
       const timer = JSON.parse(timerString) as Timer;
       const duration = Date.now() - timer.startTime;
-      await showHUD(`Timer running: ${formatDuration(duration)}`);
+      await runAppleScript(`
+        display notification "Timer for ${timer.title} running for ${formatDuration(duration)}" sound name "Frog"
+      `);
     }
   } catch (error) {
     console.error("Error in Command function:", error);
@@ -19,11 +23,4 @@ export default async function Command() {
   }
 
   return null;
-}
-
-function formatDuration(ms: number): string {
-  const seconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  return `${hours.toString().padStart(2, '0')}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
 }
