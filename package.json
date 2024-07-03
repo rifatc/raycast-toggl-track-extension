@@ -16,6 +16,14 @@
       "subtitle": "Start/Stop running timer",
       "description": "Start/Stop a timer",
       "mode": "view"
+    },
+    {
+      "name": "periodicNotifier",
+      "title": "Periodic Notifier",
+      "subtitle": "Notify about running timer",
+      "description": "Notify about running timer",
+      "mode": "no-view",
+      "interval": "1m"
     }
   ],
   "preferences": [
@@ -29,7 +37,8 @@
   ],
   "dependencies": {
     "@raycast/api": "^1.77.3",
-    "@raycast/utils": "^1.16.1"
+    "@raycast/utils": "^1.16.1",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.8",

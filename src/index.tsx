@@ -1,8 +1,20 @@
-import { Action, ActionPanel, closeMainWindow, Icon, List, LocalStorage, PopToRootType, showToast, Toast } from "@raycast/api";
+import {
+  Action,
+  ActionPanel,
+  closeMainWindow,
+  Icon,
+  List,
+  LocalStorage,
+  PopToRootType,
+  showToast,
+  Toast
+} from "@raycast/api";
 import { useEffect, useState } from "react";
 import { useCachedState } from "@raycast/utils";
 import { Timer } from "./Timer";
 import { StartTimerForm } from "./StartTimerForm";
+import { createTogglTimer } from "./api/CreateTimer";
+import { stopTogglTimer } from "./api/StopTimer";
 
 export default function Command() {
   const [runningTimer, setRunningTimer] = useCachedState<Timer | null>("runningTimer", null);
@@ -11,9 +23,7 @@ export default function Command() {
 
   useEffect(() => {
     setIsLoading(false);
-  }, [runningTimer]);
 
-  useEffect(() => {
     let intervalId: NodeJS.Timeout;
 
     if (runningTimer) {
@@ -36,9 +46,11 @@ export default function Command() {
   const startTimer = async (title: string, workspaceId: number, projectId: number) => {
     const newTimer: Timer = { title, workspaceId, projectId, startTime: Date.now() };
     try {
-      await setRunningTimer(newTimer);
+      newTimer.id = await createTogglTimer(newTimer);
+      setRunningTimer(newTimer);
+      await LocalStorage.setItem("runningTimer", JSON.stringify(newTimer));
       await showToast({ style: Toast.Style.Success, title: "Timer started", message: title });
-      closeMainWindow({ popToRootType: PopToRootType.Immediate });
+      await closeMainWindow({ popToRootType: PopToRootType.Immediate });
     } catch (error) {
       console.error("Failed to start timer:", error);
       await showToast({ style: Toast.Style.Failure, title: "Failed to start timer", message: "Please try again" });
@@ -49,10 +61,12 @@ export default function Command() {
     if (runningTimer) {
       const stoppedTimer = { ...runningTimer, endTime: Date.now() };
       try {
+        await stopTogglTimer(stoppedTimer.workspaceId.toString(), stoppedTimer.id!);
         await LocalStorage.setItem("lastTimer", JSON.stringify(stoppedTimer));
-        await setRunningTimer(null);
+        await LocalStorage.removeItem("runningTimer");
+        setRunningTimer(null);
         await showToast({ style: Toast.Style.Success, title: "Timer stopped", message: runningTimer.title });
-        closeMainWindow({ popToRootType: PopToRootType.Immediate });
+        await closeMainWindow({ popToRootType: PopToRootType.Immediate });
       } catch (error) {
         console.error("Failed to stop timer:", error);
         await showToast({ style: Toast.Style.Failure, title: "Failed to stop timer", message: "Please try again" });
