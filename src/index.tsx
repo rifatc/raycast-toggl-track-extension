@@ -93,6 +93,15 @@ export default function Command() {
           </ActionPanel>
         }
       />
+      <List.Item
+        title="Open Toggl Track in Browser"
+        icon={Icon.Globe}
+        actions={
+          <ActionPanel>
+            <Action.OpenInBrowser url="https://track.toggl.com/timer" />
+          </ActionPanel>
+        }
+      />
     </List>
   );
 }
