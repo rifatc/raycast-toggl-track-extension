@@ -67,6 +67,16 @@ export async function createTogglTimer(timer: Timer): Promise<number> {
   }
 }
 
+/**
+ * Creates a past timer in Toggl Track.
+ * This function takes a timer object with title, duration, workspaceId, and optional projectId,
+ * then calculates the start time based on the current time minus the duration,
+ * and sends a POST request to create a new time entry in Toggl Track.
+ *
+ * @param {PastTimerFormValues} timer - The timer object containing the details for the past timer to be created.
+ * @returns {Promise<number>} The ID of the created past timer.
+ * @throws {Error} Throws an error if the timer creation fails.
+ */
 export async function createPastTimer(timer: PastTimerFormValues): Promise<number> {
   const { togglTrackApiKey } = getPreferenceValues<Preferences>();
   const { title, duration, workspaceId, projectId } = timer;
