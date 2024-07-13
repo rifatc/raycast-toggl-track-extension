@@ -79,7 +79,7 @@ export async function createTogglTimer(timer: Timer): Promise<number> {
  */
 export async function createPastTimer(timer: PastTimerFormValues): Promise<number> {
   const { togglTrackApiKey } = getPreferenceValues<Preferences>();
-  const { title, duration, workspaceId, projectId } = timer;
+  const { title, duration, workspaceId, projectId, endedAt } = timer;
   const durationInSec = Number(duration) * 60;
 
   const url = `${TOGGL_API_BASE_URL}/workspaces/${workspaceId}/time_entries`;
@@ -90,7 +90,7 @@ export async function createPastTimer(timer: PastTimerFormValues): Promise<numbe
 
   const body = JSON.stringify({
     description: title,
-    start: new Date(Date.now() - durationInSec * 1000).toISOString(),
+    start: new Date(endedAt.getTime() - durationInSec * 1000).toISOString(),
     duration: Number(durationInSec),
     created_with: "Raycast",
     project_id: Number(projectId) ?? undefined,
