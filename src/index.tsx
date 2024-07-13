@@ -15,6 +15,7 @@ import { Timer } from "./Timer";
 import { StartTimerForm } from "./StartTimerForm";
 import { createTogglTimer, stopTogglTimer } from "./api/togglTrackApi";
 import formatDuration from "./utils/formatDuration";
+import CreatePastTimer from "./PastTimerForm";
 
 export default function Command() {
   const [runningTimer, setRunningTimer] = useCachedState<Timer | null>("runningTimer", null);
@@ -90,6 +91,18 @@ export default function Command() {
                 target={<StartTimerForm onSubmit={startTimer} />}
               />
             )}
+          </ActionPanel>
+        }
+      />
+      <List.Item
+        title="Create a Past Timer"
+        icon={Icon.Stopwatch}
+        actions={
+          <ActionPanel>
+            <Action.Push
+              title="Create Past Timer"
+              target={<CreatePastTimer />}
+            />
           </ActionPanel>
         }
       />
