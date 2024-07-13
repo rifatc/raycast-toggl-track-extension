@@ -13,8 +13,8 @@ export interface PastTimerFormValues {
   workspaceId: string;
   projectId: string;
   title: string;
+  startedAt: Date;
   duration: string;
-  endedAt: Date;
 }
 
 export default function CreatePastTimer() {
@@ -51,12 +51,12 @@ export default function CreatePastTimer() {
         ))}
       </Form.Dropdown>
       <Form.TextField id="title" title="Title" placeholder="Enter timer title" />
+      <Form.DatePicker id="startedAt" title="Session started at" defaultValue={new Date()} />
       <Form.TextField
         id="duration"
         title="Duration (minutes)"
         placeholder="Enter duration in minutes"
       />
-      <Form.DatePicker id="endedAt" title="Timer ended at" defaultValue={new Date()} />
     </Form>
   );
 }
