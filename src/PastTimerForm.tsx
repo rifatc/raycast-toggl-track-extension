@@ -14,6 +14,7 @@ export interface PastTimerFormValues {
   projectId: string;
   title: string;
   duration: string;
+  endedAt: Date;
 }
 
 export default function CreatePastTimer() {
@@ -55,6 +56,7 @@ export default function CreatePastTimer() {
         title="Duration (minutes)"
         placeholder="Enter duration in minutes"
       />
+      <Form.DatePicker id="endedAt" title="Timer ended at" defaultValue={new Date()} />
     </Form>
   );
 }
