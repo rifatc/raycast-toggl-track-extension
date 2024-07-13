@@ -1,20 +1,8 @@
-import { ActionPanel, Action, Form, LocalStorage, getPreferenceValues } from "@raycast/api";
-import { useFetch } from "@raycast/utils";
+// StartTimerForm.tsx
+
+import { ActionPanel, Action, Form, LocalStorage } from "@raycast/api";
 import { useEffect, useState } from "react";
-
-interface Workspace {
-  id: number;
-  name: string;
-}
-
-interface Project {
-  id: number;
-  name: string;
-}
-
-interface Preferences {
-  togglTrackApiKey: string;
-}
+import { useWorkspaces, useProjects } from "./hooks/api";
 
 interface StartTimerFormProps {
   onSubmit: (title: string, workspaceId: number, projectId: number) => void;
@@ -27,33 +15,12 @@ interface LastTimer {
 }
 
 export function StartTimerForm({ onSubmit }: StartTimerFormProps) {
-  const preferences = getPreferenceValues<Preferences>();
-  const apiKey = preferences.togglTrackApiKey;
-
   const [lastTimer, setLastTimer] = useState<LastTimer | null>(null);
   const [isLoadingLastTimer, setIsLoadingLastTimer] = useState(true);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number | null>(null);
 
-  const { data: workspaces, isLoading: isLoadingWorkspaces } = useFetch<Workspace[]>(
-    "https://api.track.toggl.com/api/v9/workspaces",
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ${Buffer.from(`${apiKey}:api_token`).toString("base64")}`,
-      },
-    }
-  );
-
-  const { data: projects } = useFetch<Project[]>(
-    `https://api.track.toggl.com/api/v9/workspaces/${selectedWorkspaceId}/projects`,
-    {
-      execute: !!selectedWorkspaceId,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ${Buffer.from(`${apiKey}:api_token`).toString("base64")}`,
-      },
-    }
-  );
+  const { data: workspaces, isLoading: isLoadingWorkspaces } = useWorkspaces();
+  const { data: projects } = useProjects(selectedWorkspaceId);
 
   useEffect(() => {
     async function fetchLastTimer() {
